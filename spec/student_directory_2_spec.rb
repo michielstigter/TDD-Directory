@@ -1,11 +1,10 @@
 require 'student_directory'
-
-
+require 'date'
 
 describe 'Student directory' do
 
 	let(:sarah)   { {:name=>"Sarah", :cohort => :June}      }
-	let(:edward)  { {:name=>"Edward", :cohort => :november} }
+	let(:edward)  { {:name=>"Edward", :cohort => :November} }
 	let(:anna)    { {:name=>"anna", :cohort => :June}       }
 
 	context 'when inputting new students' do
@@ -40,7 +39,7 @@ describe 'Student directory' do
 
 		     it 'only records cohort if valid' do
 		     	allow(self).to receive(:take_user_input).and_return("banana","banana","june", "banana")
-		     	allow(self).to receive(:ask_for_data)
+		     	
 		     	expect(get_input("cohort")).to eq "june"
 		     end
 
@@ -48,13 +47,14 @@ describe 'Student directory' do
 
 	    it 'does not ask for another input if name is banana' do
 	     	allow(self).to receive(:take_user_input).and_return("banana","banana","june", "banana")
+	     	allow(self).to receive(:ask_for_data)
 	     	expect((get_input("name"))).to eq("banana")
 	     end
 
 	     it 'creates a student with name and cohort' do 
 	     	name = "Sarah"
 
-	     	cohort = :june
+	     	cohort = :June
 	     	new_student = {:name => name, :cohort => cohort}
 	     	expect(create_student(name,cohort)).to eq new_student
 	     end
@@ -72,8 +72,8 @@ describe 'Student directory' do
 	 	end
 
 	 	it 'gets details of new student' do 
-	 		allow(self).to receive(:get_inputs).and_return(["bob", "june"])
-	 		expect(get_details_of_new_student).to eq({:name=>"bob", :cohort=>"june"})
+	 		allow(self).to receive(:get_inputs).and_return(["bob", "June"])
+	 		expect(get_details_of_new_student).to eq({:name=>"bob", :cohort=> :June})
 	 	end
 
 	 	it 'gets the required number of inputs' do 
@@ -91,9 +91,8 @@ describe 'Student directory' do
 
 	 	it 'keeps asking for new students while user enters "Y"' do
 	 		allow(self).to receive(:take_user_input).and_return("Y", "Sarah", "June", "Y", "Edward", "may", "N")
-	 		add_another_student?
+	 		allow(add_another_student?)
 	 		expect(students.count).to eq 2
-	 		puts students.inspect
 	 	end
 
 	 	it 'counts the number of students when the array is empty and user selects "N"' do
@@ -117,7 +116,7 @@ describe 'Student directory' do
 				expect(self).to receive(:show).with("#{student[:name].capitalize} is in the #{student[:cohort].capitalize} cohort")
 			end
 		end
-				
+
 		
 		it 'prints a student' do
 			expect(self).to receive(:show).with("Sarah is in the June cohort")
@@ -144,9 +143,22 @@ describe 'Student directory' do
 
 	context 'when asked to sort' do
 
-		xit 'puts anna before edward in the list' do
-			students = [edward,anna]
-			expect(sort_by_cohort(students)).to eq[anna,edward]
+		it 'lists the november students only' do
+			students = [edward,anna,sarah]
+			expect(select_by_month("November",students)).to eq([edward])
+		end
+
+		it 'lists the june students only' do
+			students = [edward,anna,sarah]
+			expect(select_by_month("June",students)).to eq([anna,sarah])
+		end
+
+		xit 'prints all the june students only' do
+			students = [edward,anna,sarah]
+			Date::MONTHNAMES.compact.each do |month|
+				expect(self).to receive(:select_by_month)
+			end
+			print_students_by_month(students)
 		end
 	end
 

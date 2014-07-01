@@ -18,7 +18,7 @@ def is_cohort_valid?(string)
 end
 
 def create_student(name, cohort)
-	{name: name, cohort: cohort}
+	{name: name, cohort: cohort.downcase.capitalize.to_sym}
 end
 
 def students
@@ -50,10 +50,6 @@ def get_details_of_new_student
 	# puts "the students are ------ #{students}"
 end
 
-def save_student_details? new_student
-	show new_student[:name]
-	show new_student[:cohort]
-end
 
 def get_inputs(input_list)
 	input_list.map {|input_type| get_input(input_type)}
@@ -93,3 +89,36 @@ def print_student_list(students)
 		print_student(student)
 	end
 end
+
+def select_by_month(month, students)
+	
+	students.select{|student| student[:cohort]==month.to_sym}
+end
+
+def print_students_by_month students
+	Date::MONTHNAMES.compact.each do |month|
+		selected_month_students = select_by_month(month,students)
+		if selected_month_students.length!=0
+			puts month
+			print_student_list(selected_month_students)
+		end
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
