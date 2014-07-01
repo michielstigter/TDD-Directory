@@ -83,3 +83,13 @@ def process_user_choice selection
 		add_another_student?
 	end
 end
+
+def print_student(student)
+	show("#{student[:name].capitalize} is in the #{student[:cohort].capitalize} cohort")
+end
+
+def print_student_list(students)
+	students.each do |student|
+		print_student(student)
+	end
+end
