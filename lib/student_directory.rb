@@ -17,7 +17,6 @@ def is_cohort_valid?(string)
 	Date::MONTHNAMES.compact.include?(string.downcase.capitalize)
 end
 
-
 def create_student(name, cohort)
 	{name: name, cohort: cohort}
 end
@@ -32,14 +31,21 @@ end
 
 
 def get_input (data_type)
-	ask_for_data (data_type)
-	take_user_input
+	if data_type=="cohort"
+		user_input = ""
+		until is_cohort_valid?(user_input)
+			ask_for_data (data_type)
+			user_input = take_user_input
+		end
+	else 
+		ask_for_data (data_type)
+		user_input = take_user_input
+	end
+	return user_input
 end
 
 def get_details_of_new_student
 	name, cohort = get_inputs(["student's name", "cohort"])
-	puts "the input for name is #{name}"
-	puts "the input for cohort is #{cohort}"
 	create_student(name, cohort)
 	# puts "the students are ------ #{students}"
 end
@@ -54,7 +60,7 @@ def get_inputs(input_list)
 end
 
 def print_student_number
-	show ("There are #{students.length} students(s) in the directory")	
+	show ("There are #{students.length} student(s) in the directory")
 end
 
 
